@@ -1,0 +1,258 @@
+---
+title: "Easing Street"
+subtitle: "a gganimate easing gallary"
+author: "<br><br>Gina Reynolds, March 2019"
+date: "<br>"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: ["kunoichi", "ninjutsu"]
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.height = 3, out.width = "100%", comment = " ", cache = F, echo = F)
+
+options(gganimate.nframes = 25)
+```
+
+
+# Introduction
+
+gganimate is cool.  
+
+It does take a while to compile each plot, however, and you have a lot of options, so it may take a while to iterate to the perfect plot.
+
+There are a particularly lot of easing options, and easing can give your animated plots very different character --- some of the options are playfulness, some matter-of-fact, some dramatic! 
+
+This book goes through the gganimate easing options with an example which goes from data plotted in one dimention to a histogram representation of the same data; so the animation is on the topic of "where histograms come from."  
+
+The examples should give you a sense of each easing option.  Also, you can modify the code with your own plot and to observe how all the different easings will look for your unique plot.  
+
+Learn more about gganimate [here](https://gganimate.com/index.html); Thomas Lin Pedersen and David Robinson are the project's principle authors.
+
+Also, for side side-by-side comparison of easing functions, another useful resource is [easing.net](https://easings.net/en).
+
+Note: For now, I'm just looking at ease-in-ease-out, but maybe I'll extend the project to ease-in only and ease-out only.  
+
+And for the growing histogram, I'm liking back-in-out.  
+
+---
+
+# Easing options
+
+There are some options, quoting from [https://gganimate.com/reference/ease_aes.html](https://gganimate.com/reference/ease_aes.html): 
+
+- quadratic - Models a power-of-2 function
+- cubic - Models a power-of-3 function
+- quartic - Models a power-of-4 function
+- quintic - Models a power-of-5 function
+- sine - Models a sine function
+- circular - Models a pi/2 circle arc
+- exponential - Models an exponential function
+- elastic - Models an elastic release of energy
+- back - Models a pullback and relase
+- bounce - Models the bouncing of a ball
+
+And when it is applied:
+
+- in
+- out
+- in and out
+
+
+```{r, message = F, warning = F}
+my_easing_options <- paste0(c("quadratic",
+"cubic",
+"quartic" ,
+"quintic" ,
+"sine",
+"circular",
+"exponential",
+"elastic",
+"back",
+"bounce"), "-in-out")
+
+# length(my_easing_options)
+```
+
+
+```{r, message = F, warning = F}
+library(tidyverse)
+library(gapminder)
+library(gganimate)
+
+set.seed(2019)
+
+by <- 5
+
+break_low <- seq(30, 85, by = by)
+
+gapminder %>% 
+  filter(year == 1977) %>% 
+  mutate(var1 = lifeExp) %>% 
+  sample_n(25) %>% 
+  arrange(var1) ->
+raw
+
+raw %>% 
+  crossing(tibble(break_low)) %>% 
+  mutate(break_high = break_low + 2) %>% 
+  filter(var1 > break_low & var1 <= (break_low + by)) %>% 
+  group_by(break_low) %>% 
+  mutate(hight_in_hist = 1:n()) ->
+end_points
+
+end_points %>% 
+  crossing(tibble(time = 1:3)) %>% 
+  mutate(hight_in_hist = ifelse(time == 1, 0 , hight_in_hist)) ->
+start_and_end_points
+
+end_points %>% 
+  summarise(total_height = max(hight_in_hist)) %>% 
+  crossing(tibble(time = 1:3)) %>% 
+  mutate(total_height = ifelse(time == 1, 0 , total_height)) ->
+start_and_end_rectangle
+
+g <- ggplot(start_and_end_points) +
+  aes(x = lifeExp) +
+  aes(y = hight_in_hist) +
+  geom_rect(data = start_and_end_rectangle,
+            aes(xmin = break_low, xmax = break_low + by, ymin = 0, ymax = total_height, x = NULL, y = NULL)) + 
+  geom_vline(xintercept = break_low, alpha = .3) +
+  geom_hline(yintercept = seq(1, max(end_points$hight_in_hist) + 2, by = 1), alpha = .4, color = "magenta") +
+  geom_point(alpha = .6, col = "steelblue", size = 4) +
+  geom_segment(alpha = .3, col = "steelblue", aes(x = break_low, xend = break_low + by, yend = hight_in_hist)) +
+  gganimate::transition_time(time) +
+  scale_y_continuous(breaks = seq(0, max(end_points$hight_in_hist) + 2, by = 1)) +
+  labs(y = "Count", x = "Life Expectency") 
+i <- 0
+```
+
+
+---
+
+# A gganimate plot
+
+Here is code to generate one of the animated plots to come.  The highlighted line is where the easing decision is made.  In the animations that follow, all is identical to this code, except for the easing piece.  
+
+```{r, eval = F, echo = T}
+ggplot(start_and_end_points) +
+  aes(x = lifeExp) +
+  aes(y = hight_in_hist) +
+  geom_rect(data = start_and_end_rectangle,
+            aes(xmin = break_low, xmax = break_low + by, 
+                ymin = 0, ymax = total_height, x = NULL, y = NULL)) + 
+  geom_vline(xintercept = break_low, alpha = .3) +
+  geom_hline(yintercept = seq(1, max(end_points$hight_in_hist) + 2, by = 1), 
+             alpha = .4, color = "magenta") +
+  geom_point(alpha = .6, col = "steelblue", size = 4) +
+  geom_segment(alpha = .3, col = "steelblue", 
+               aes(x = break_low, xend = break_low + by, yend = hight_in_hist)) +
+  gganimate::transition_time(time) +
+  scale_y_continuous(breaks = seq(0, max(end_points$hight_in_hist) + 2, by = 1)) +
+  labs(y = "Count", x = "Life Expectency") +
+  ease_aes("quadratic-in-out") #<<
+```
+
+
+
+
+```{r ani_plot, echo=F, eval = F}
+g + 
+  ease_aes(my_easing_options[i])
+```
+
+```{r, echo = F}
+the_code <- glue::glue(knitr:::knit_code$get("ani_plot")[1], knitr:::knit_code$get("ani_plot")[2])
+```
+
+---
+
+# `r i <- i + 1; my_easing_options[i]`
+
+
+```{r, code = the_code}
+```
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+
+```{r, code = the_code}
+```
+
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+
+```{r, code = the_code}
+```
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+
+```{r, code = the_code}
+```
+
+
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+
+```{r, code = the_code}
+```
+
+
+
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+```{r, code = the_code}
+```
+
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+```{r, code = the_code}
+```
+
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+```{r, code = the_code}
+```
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+```{r, code = the_code}
+```
+
+---
+# `r i <- i + 1; my_easing_options[i]`
+
+```{r, code = the_code}
+```
+
+
+```{css, eval = TRUE, echo = F}
+.remark-code{line-height: 1.5; font-size: 90%}
+```
+
+
+
+
+
+
+
