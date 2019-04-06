@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Easing Street</title>
+    <meta charset="utf-8">
+    <meta name="author" content="  Gina Reynolds, March 2019" />
+    <link href="libs/remark-css-0.0.1/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Easing Street
+## a gganimate easing gallary
+### <br><br>Gina Reynolds, March 2019
+### <br>
+
+---
+
+
+
+
+
+# Introduction
+
+gganimate is cool.  
+
+But, it does take a while to compile each plot and you have a lot of options, so it may take a while to iterate to the perfect plot.
+
+There are a particularly lot of easing options, and easing can give your animated plots very different character --- some of the options are playfulness, some matter-of-fact, some dramatic! 
+
+This book goes through the gganimate easing options with an example which goes from data plotted in one dimention to a histogram representation of the same data; so the animation is on the topic of "where histograms come from."  
+
+The examples should give you a sense of each easing option.  Also, you can modify the code with your own plot and to observe how all the different easings will look for your unique plot.  
+
+Learn more about gganimate [here](https://gganimate.com/index.html); Thomas Lin Pedersen and David Robinson are the project's principle authors.
+
+Also, for side side-by-side comparison of easing functions, another useful resource is [easing.net](https://easings.net/en).
+
+Note: For now, I'm just looking at ease-in-ease-out, but maybe I'll extend the project to ease-in only and ease-out only.  
+
+And for the growing histogram, I'm liking back-in-out.  
+
+---
+
+# Easing options
+
+There are some options, quoting from [https://gganimate.com/reference/ease_aes.html](https://gganimate.com/reference/ease_aes.html): 
+
+- quadratic - Models a power-of-2 function
+- cubic - Models a power-of-3 function
+- quartic - Models a power-of-4 function
+- quintic - Models a power-of-5 function
+- sine - Models a sine function
+- circular - Models a pi/2 circle arc
+- exponential - Models an exponential function
+- elastic - Models an elastic release of energy
+- back - Models a pullback and relase
+- bounce - Models the bouncing of a ball
+
+And when it is applied:
+
+- in
+- out
+- in and out
+
+
+
+
+
+
+
+
+
+
+
+---
+
+# A gganimate plot
+
+Here is code to generate one of the animated plots to come.  The highlighted line is where the easing decision is made.  In the animations that follow, all is identical to this code, except for the easing piece.  
+
+
+```r
+ggplot(start_and_end_points) +
+  aes(x = lifeExp) +
+  aes(y = hight_in_hist) +
+  geom_rect(data = start_and_end_rectangle,
+            aes(xmin = break_low, xmax = break_low + by, 
+                ymin = 0, ymax = total_height, x = NULL, y = NULL)) + 
+  geom_vline(xintercept = break_low, alpha = .3) +
+  geom_hline(yintercept = seq(1, max(end_points$hight_in_hist) + 2, by = 1), 
+             alpha = .4, color = "magenta") +
+  geom_point(alpha = .6, col = "steelblue", size = 4) +
+  geom_segment(alpha = .3, col = "steelblue", 
+               aes(x = break_low, xend = break_low + by, yend = hight_in_hist)) +
+  gganimate::transition_time(time) +
+  scale_y_continuous(breaks = seq(0, max(end_points$hight_in_hist) + 2, by = 1)) +
+  labs(y = "Count", x = "Life Expectency") +
+* ease_aes("quadratic-in-out")
+```
+
+
+
+
+
+
+
+
+---
+
+# quadratic-in-out
+
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-3-1.gif" width="100%" /&gt;
+
+---
+# cubic-in-out
+
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-4-1.gif" width="100%" /&gt;
+
+
+---
+# quartic-in-out
+
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-5-1.gif" width="100%" /&gt;
+
+---
+# quintic-in-out
+
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-6-1.gif" width="100%" /&gt;
+
+
+
+---
+# sine-in-out
+
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-7-1.gif" width="100%" /&gt;
+
+
+
+
+---
+# circular-in-out
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-8-1.gif" width="100%" /&gt;
+
+
+---
+# exponential-in-out
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-9-1.gif" width="100%" /&gt;
+
+
+---
+# elastic-in-out
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-10-1.gif" width="100%" /&gt;
+
+---
+# back-in-out
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-11-1.gif" width="100%" /&gt;
+
+---
+# bounce-in-out
+
+&lt;img src="easing_examples_files/figure-html/unnamed-chunk-12-1.gif" width="100%" /&gt;
+
+
+&lt;style type="text/css"&gt;
+.remark-code{line-height: 1.5; font-size: 90%}
+&lt;/style&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

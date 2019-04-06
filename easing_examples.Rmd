@@ -25,7 +25,7 @@ options(gganimate.nframes = 25)
 
 gganimate is cool.  
 
-It does take a while to compile each plot, however, and you have a lot of options, so it may take a while to iterate to the perfect plot.
+But, it does take a while to compile each plot and you have a lot of options, so it may take a while to iterate to the perfect plot.
 
 There are a particularly lot of easing options, and easing can give your animated plots very different character --- some of the options are playfulness, some matter-of-fact, some dramatic! 
 
