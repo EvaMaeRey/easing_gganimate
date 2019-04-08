@@ -1,6 +1,6 @@
 ---
 title: "Easing Street"
-subtitle: "a gganimate easing gallary"
+subtitle: "a gganimate easing gallery"
 author: "<br><br>Gina Reynolds, April 2019"
 date: "<br>"
 output:
