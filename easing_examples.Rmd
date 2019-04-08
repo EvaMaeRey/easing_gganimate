@@ -1,7 +1,7 @@
 ---
 title: "Easing Street"
 subtitle: "a gganimate easing gallary"
-author: "<br><br>Gina Reynolds, March 2019"
+author: "<br><br>Gina Reynolds, April 2019"
 date: "<br>"
 output:
   xaringan::moon_reader:
@@ -15,7 +15,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(fig.height = 3, out.width = "100%", comment = " ", cache = F, echo = F)
+knitr::opts_chunk$set(fig.height = 3, out.width = "100%", comment = " ", cache = F, echo = F, dpi = 300)
 
 options(gganimate.nframes = 25)
 ```
@@ -23,29 +23,17 @@ options(gganimate.nframes = 25)
 
 # Introduction
 
-gganimate is cool.  
+[gganimate](https://gganimate.com/index.html) is cool. But, it does take a while to compile each plot because each animation is composed of a lot of frames.  Given that you have a lot of options too, it may take some patience to iterate to the perfect plot.  There are a particularly lot of easing options, and easing can give your animated plots very different character --- some of the options are playfulness, some matter-of-fact, some dramatic! This book provides examples of the gganimate easing options.
 
-But, it does take a while to compile each plot and you have a lot of options, so it may take a while to iterate to the perfect plot.
+The example is moving from data plotted in one dimension to the same data represented in a histogram.  Basically, histograms are solving an overplotting problem --- when there aren't a lot of observations, we show the distribution in just one dimension, but when there are a lot, adding another dimension helps avoid overplotting.  I'm liking "elastic-in-out" easing for this application.  For now, I'm just looking at ease-in-ease-out, but maybe I'll extend the project to ease-in only and ease-out only.  
 
-There are a particularly lot of easing options, and easing can give your animated plots very different character --- some of the options are playfulness, some matter-of-fact, some dramatic! 
-
-This book goes through the gganimate easing options with an example which goes from data plotted in one dimention to a histogram representation of the same data; so the animation is on the topic of "where histograms come from."  
-
-The examples should give you a sense of each easing option.  Also, you can modify the code with your own plot and to observe how all the different easings will look for your unique plot.  
-
-Learn more about gganimate [here](https://gganimate.com/index.html); Thomas Lin Pedersen and David Robinson are the project's principle authors.
-
-Also, for side side-by-side comparison of easing functions, another useful resource is [easing.net](https://easings.net/en).
-
-Note: For now, I'm just looking at ease-in-ease-out, but maybe I'll extend the project to ease-in only and ease-out only.  
-
-And for the growing histogram, I'm liking back-in-out.  
+More intuition on easing and side side-by-side comparison of easing functions, another useful resource is [easing.net](https://easings.net/en).   Many thanks are due to the gganimate principal authors Thomas Lin Pedersen and David Robinson for making this awesome package available. 
 
 ---
 
 # Easing options
 
-There are some options, quoting from [https://gganimate.com/reference/ease_aes.html](https://gganimate.com/reference/ease_aes.html): 
+There are some options, quoting exactly from [https://gganimate.com/reference/ease_aes.html](https://gganimate.com/reference/ease_aes.html): 
 
 - quadratic - Models a power-of-2 function
 - cubic - Models a power-of-3 function
@@ -55,7 +43,7 @@ There are some options, quoting from [https://gganimate.com/reference/ease_aes.h
 - circular - Models a pi/2 circle arc
 - exponential - Models an exponential function
 - elastic - Models an elastic release of energy
-- back - Models a pullback and relase
+- back - Models a pullback and release
 - bounce - Models the bouncing of a ball
 
 And when it is applied:
@@ -67,15 +55,16 @@ And when it is applied:
 
 ```{r, message = F, warning = F}
 my_easing_options <- paste0(c("quadratic",
-"cubic",
-"quartic" ,
-"quintic" ,
-"sine",
-"circular",
 "exponential",
 "elastic",
 "back",
-"bounce"), "-in-out")
+"bounce",
+"circular",
+"cubic",
+"quartic" ,
+"quintic" ,
+"sine"
+), "-in-out")
 
 # length(my_easing_options)
 ```
